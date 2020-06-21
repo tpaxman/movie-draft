@@ -12,26 +12,15 @@ plotter <- function(paramname, breaklist){
   
   outliers <- thistidy %>%
     group_by(team) %>% 
-    filter(value = max(value))
-  
-  tidysum <- thistidy %>% 
-    group_by(team) %>% 
-    summarise(minval = min(value), meanval = mean(value), maxval = max(value)) %>% 
-    arrange(meanval)
-  
-  ggplot(data=thistidy, aes(x=reorder(team, -value), y=value, label = title)) +
-    #geom_linerange(data=tidysum, aes(x=team, ymin=minval, ymax=maxval)) +
+    filter((value == max(value)) | (value == min(value)))
+
+  ggplot(data = thistidy, aes(x=reorder(team, -value), y=value)) +
     geom_boxplot() +
     scale_y_continuous(breaks = breaklist) +
-    geom_text() +
-    #geom_point(data=thistidy, aes(x=team, y=value)) +
+    geom_text(data = outliers, aes(x = team, y = value, label = title), hjust = 0, vjust = -1) +
+    geom_point(data = outliers, aes(x = team, y = value)) +
     coord_flip()
 }
-
-result <- df %>% 
-  group_by(A, B) %>%
-  filter(value == max(value)) %>%
-  arrange(A,B,C)
 
 
 plotter('year', seq(1950, 2020, 5))
