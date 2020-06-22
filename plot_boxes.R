@@ -25,7 +25,7 @@ plotter <- function(paramname, breaklist, limitlist){
     select(-title, -id) %>% 
     distinct()
 
-  ggplot(data = thistidy, aes(x=reorder(team, value), y=value)) +
+  ggplot(data = thistidy, aes(x=fct_rev(team), y=value)) +
     geom_boxplot(aes(fill = team), size = 1) +
     scale_y_continuous(breaks = breaklist, limits = limitlist) +
     labs(x = NULL, y = valuename) +
